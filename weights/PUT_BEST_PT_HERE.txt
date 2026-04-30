@@ -1,0 +1,8 @@
+Put your trained model here and rename it exactly:
+
+best.pt
+
+Final path:
+weights/best.pt
+
+The Streamlit app also supports uploading best.pt directly from the sidebar.
