@@ -38,7 +38,6 @@ roundabout-yolov11-streamlit-deploy/
 ├── app.py
 ├── count_video.py
 ├── requirements.txt
-├── packages.txt
 ├── Dockerfile
 ├── README.md
 ├── .streamlit/
@@ -255,3 +254,12 @@ Adjust the counting line so that vehicles cross it clearly. Avoid placing the li
 ### Browser cannot preview output video
 
 The file is still downloadable. Some cloud environments have limited video codec support. Download the MP4 and open it locally.
+
+---
+
+## Streamlit Cloud apt dependency note
+
+This fixed version intentionally does **not** include `packages.txt`.
+The app uses `opencv-python-headless`, so Streamlit Cloud should skip the apt package step.
+If a previous deployment failed while installing `ffmpeg`, `libgl1`, or `libglib2.0-0`, delete `packages.txt` from the GitHub repository and redeploy.
+

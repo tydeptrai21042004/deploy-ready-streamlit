@@ -1,59 +1,44 @@
-# Free deployment guide
+# Free deployment guide — fixed Streamlit Cloud version
 
-## Best free path for this project
+## Important fix
 
-Use **Hugging Face Spaces with Streamlit SDK** or **Streamlit Community Cloud**.
+This version intentionally has **no `packages.txt`**.
 
-Because YOLO video inference is heavy, the simplest reliable free workflow is:
+Your previous Streamlit Cloud build failed during the Linux `apt-get` step because `packages.txt` requested packages such as `ffmpeg`, `libgl1`, and `libglib2.0-0`. On the current Streamlit Cloud base image, those packages can pull conflicting Debian versions.
 
-1. deploy the app code only;
-2. upload `best.pt` from the sidebar when running the app;
-3. use short demo videos for cloud CPU;
-4. for full videos, run locally or on a GPU machine.
+The app now relies on Python wheels instead:
 
----
-
-## Hugging Face Spaces
-
-1. Create account on Hugging Face.
-2. Create new Space.
-3. SDK: Streamlit.
-4. Upload all files from this folder.
-5. Wait for build.
-6. Open app.
-7. Upload `best.pt` and video.
-
-Optional permanent model setup:
-
-```bash
-git lfs install
-git lfs track "*.pt"
-git add .gitattributes weights/best.pt
-git commit -m "Add YOLO model"
-git push
+```text
+opencv-python-headless
+ultralytics
+streamlit
 ```
 
-If doing this, remove or edit the `weights/*.pt` rule in `.gitignore`.
+So the cloud build should go directly to Python dependency installation.
 
 ---
 
-## Streamlit Community Cloud
+## Deploy on Streamlit Community Cloud
 
-1. Push this folder to GitHub.
-2. Go to Streamlit Community Cloud.
-3. New app → choose repo.
-4. Main file path: `app.py`.
-5. Deploy.
-6. Upload `best.pt` from sidebar.
+1. Unzip this folder.
+2. Put the files into your GitHub repository.
+3. Make sure `packages.txt` is **not** in the repository.
+4. Push to GitHub.
+5. In Streamlit Cloud, reboot/redeploy the app.
+6. Upload `best.pt` in the sidebar, or place it at:
 
-Note: GitHub has file-size restrictions. If `best.pt` is large, do not commit it directly.
+```text
+weights/best.pt
+```
+
+For large `.pt` files, uploading in the sidebar is easier than committing to GitHub.
 
 ---
 
 ## Local Windows command
 
 ```powershell
-cd roundabout-yolov11-streamlit-deploy
+cd roundabout-yolov11-streamlit-deploy-fixed
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
@@ -65,9 +50,16 @@ streamlit run app.py
 ## Local Linux/macOS command
 
 ```bash
-cd roundabout-yolov11-streamlit-deploy
+cd roundabout-yolov11-streamlit-deploy-fixed
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+---
+
+## If video output does not preview in browser
+
+The counter still saves the output video. Download it from the app and open it locally.
+Some free cloud environments may have limited MP4 codec support.
