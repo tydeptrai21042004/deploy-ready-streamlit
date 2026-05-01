@@ -1,4 +1,10 @@
-from .counter import CountConfig, CountResult, RoundaboutVehicleCounter
+from .counter import CountConfig, CountResult, ImageCountResult, RoundaboutVehicleCounter
 from .geometry import CountingLine
 
-__all__ = ["CountConfig", "CountResult", "RoundaboutVehicleCounter", "CountingLine"]
+__all__ = [
+    "CountConfig",
+    "CountResult",
+    "ImageCountResult",
+    "RoundaboutVehicleCounter",
+    "CountingLine",
+]

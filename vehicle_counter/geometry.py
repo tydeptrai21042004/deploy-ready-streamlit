@@ -40,7 +40,8 @@ class CountingLine:
 
     def crossed(self, previous_side: float, current_side: float, direction: Direction = "both") -> bool:
         """Return True if a track crossed the line between two side values."""
-        if previous_side == 0 or current_side == 0:
+        eps = 1e-6
+        if abs(previous_side) < eps or abs(current_side) < eps:
             return False
         if previous_side * current_side > 0:
             return False
